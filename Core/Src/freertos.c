@@ -35,10 +35,14 @@
 #include <string.h>
 #include <stdio.h>
 
+#include "lvgl.h"
+
 extern SPI_HandleTypeDef hspi1;
 extern SAI_HandleTypeDef hsai_BlockB2;
 
 extern uint8_t file_system_err;
+
+extern uint32_t lv_timer_handler(void);
 
 QueueHandle_t xQueue_filecopy = NULL;
 
@@ -54,8 +58,16 @@ const osThreadAttr_t defaultTask_attributes = {
     .priority = (osPriority_t)osPriorityNormal,
 };
 
+osThreadId_t lvglTaskHandle;
+const osThreadAttr_t lvglTask_attributes = {
+    .name = "LvglTask",
+    .stack_size = 1024 * 8,
+    .priority = (osPriority_t)osPriorityNormal,
+};
+
 TaskHandle_t audioTaskHandle = NULL;
 
+void LVGLTimer(void * argument);
 
 void StartDefaultTask(void *argument);
 void audioTask(void *argument);
@@ -75,10 +87,14 @@ void MX_FREERTOS_Init(void)
   xSemaphore_usb = xSemaphoreCreateMutex();
 
   defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
+
+  lvglTaskHandle = osThreadNew(LVGLTimer, NULL, &lvglTask_attributes);
   
   // audioTaskHandle = osThreadNew(audioTask, NULL, &audioTask_attr);
 
   xTaskCreate ( audioTask, "audioTask", 1024, NULL, 24, &audioTaskHandle);
+
+  
 }
 
 void audioTask (void *argument)
@@ -119,5 +135,14 @@ void StartDefaultTask(void *argument)
 		HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
     osDelay(100);
 
+  }
+}
+
+void LVGLTimer(void * argument)
+{
+  for(;;)
+  {
+    lv_timer_handler();
+    osDelay(1);
   }
 }

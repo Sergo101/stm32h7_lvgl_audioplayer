@@ -40,6 +40,10 @@
 #include "gt911.h"
 #include "spi.h"
 #include "tim.h"
+#include "lvgl.h"
+#include "lvgl_port_display.h"
+#include "lvgl_port_touch.h"
+#include "demos/lv_demos.h"
 
 #include "usbh_core.h"
 #include "usbh_msc.h"
@@ -165,7 +169,7 @@ int main(void)
 
   /* Enable I-Cache---------------------------------------------------------*/
   SCB_EnableICache();
-	// SCB_EnableDCache();
+	SCB_EnableDCache();
 	
 	HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
   /* MCU Configuration--------------------------------------------------------*/
@@ -205,6 +209,20 @@ int main(void)
   MX_SAI2_Init();
   sd_card_mount();
   MX_TIM2_Init();
+
+    /* initialize LVGL framework */
+  lv_init();
+  lv_tick_set_cb(HAL_GetTick);
+
+  /* initialize display and touchscreen */
+  lvgl_display_init();
+  lvgl_touchscreen_init();
+
+  /* lvgl demo */
+  lv_demo_widgets();
+  //lv_demo_music();
+  //lv_demo_benchmark();
+
   // parse_settings();
   /* Init scheduler */
   osKernelInitialize();

@@ -34,37 +34,22 @@ set(cpu_PARAMS
 )
 
 # Sources
-set(sources_SRCS
-${CMAKE_CURRENT_LIST_DIR}/Core/Src/bsp_sdram.c
-${CMAKE_CURRENT_LIST_DIR}/Core/Src/crc.c
-${CMAKE_CURRENT_LIST_DIR}/Core/Src/dma2d.c
-${CMAKE_CURRENT_LIST_DIR}/Core/Src/fmc.c
-${CMAKE_CURRENT_LIST_DIR}/Core/Src/freertos.c
-${CMAKE_CURRENT_LIST_DIR}/Core/Src/gpio.c
-${CMAKE_CURRENT_LIST_DIR}/Core/Src/i2c.c
-${CMAKE_CURRENT_LIST_DIR}/Core/Src/ltdc.c
-${CMAKE_CURRENT_LIST_DIR}/Core/Src/quadspi.c
-${CMAKE_CURRENT_LIST_DIR}/Core/Src/sai.c
-${CMAKE_CURRENT_LIST_DIR}/Core/Src/sdmmc.c
-${CMAKE_CURRENT_LIST_DIR}/Core/Src/spi.c
-${CMAKE_CURRENT_LIST_DIR}/Core/Src/stm32h7xx_hal_msp.c
-${CMAKE_CURRENT_LIST_DIR}/Core/Src/stm32h7xx_hal_timebase_tim.c
-${CMAKE_CURRENT_LIST_DIR}/Core/Src/stm32h7xx_it.c
-${CMAKE_CURRENT_LIST_DIR}/Core/Src/system_stm32h7xx.c
-${CMAKE_CURRENT_LIST_DIR}/Core/Src/usart.c
-${CMAKE_CURRENT_LIST_DIR}/Core/Src/usbh_conf.c
-${CMAKE_CURRENT_LIST_DIR}/Core/Src/tim.c
+file(GLOB_RECURSE sources_SRCS
+${CMAKE_CURRENT_LIST_DIR}/Core/Src/*.c
+${CMAKE_CURRENT_LIST_DIR}/Middlewares/Third_Party/lvgl/src/*.c
+${CMAKE_CURRENT_LIST_DIR}/Middlewares/Third_Party/lvgl/demos/*.c
+${CMAKE_CURRENT_LIST_DIR}/Middelwares/Third_Party/lvgl/src/misc/*.c
 )
 
 # Include directories for all compilers
 set(include_DIRS
 ${CMAKE_CURRENT_LIST_DIR}/Core/Inc
+${CMAKE_CURRENT_LIST_DIR}/Middlewares/Third_Party/lvgl
+${CMAKE_CURRENT_LIST_DIR}/Middelwares/Third_Party/lvgl/demos
 )
 
 # Include directories for each compiler
-set(include_c_DIRS
-${CMAKE_CURRENT_LIST_DIR}/Core/Src
-)
+set(include_c_DIRS)
 set(include_cxx_DIRS)
 set(include_asm_DIRS)
 
@@ -120,14 +105,10 @@ include("cmake/vscode_generated.cmake")
 link_directories(${CMAKE_PROJECT_NAME} ${link_DIRS})
 
 # Create an executable object type
-add_executable(${CMAKE_PROJECT_NAME})
-
-# Add sources to executable
-target_sources(${CMAKE_PROJECT_NAME} PUBLIC ${sources_SRCS} ${graphics_core_generated_SRCS})
+add_executable(${CMAKE_PROJECT_NAME} ${sources_SRCS})
 
 # Add include paths
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
-    ${touchgfx_include_DIRS}
     ${include_DIRS}
     $<$<COMPILE_LANGUAGE:C>: ${include_c_DIRS}>
     $<$<COMPILE_LANGUAGE:CXX>: ${include_cxx_DIRS}>
