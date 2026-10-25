@@ -36,6 +36,7 @@
 #include <stdio.h>
 
 #include "lvgl.h"
+#include "gt911.h"
 
 extern SPI_HandleTypeDef hspi1;
 extern SAI_HandleTypeDef hsai_BlockB2;
@@ -126,15 +127,15 @@ void audioTask (void *argument)
  * @retval None
  */
 /* USER CODE END Header_StartDefaultTask */
+
 void StartDefaultTask(void *argument)
 {
 
   for (;;)
   {
-    
 		HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
-    osDelay(100);
-
+    gt911_StartConvesion();
+    osDelay(33);
   }
 }
 
@@ -143,6 +144,6 @@ void LVGLTimer(void * argument)
   for(;;)
   {
     lv_timer_handler();
-    osDelay(1);
+    // osDelay(1);
   }
 }

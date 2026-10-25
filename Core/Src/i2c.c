@@ -19,6 +19,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "i2c.h"
+#include "gt911.h"
 
 /* USER CODE BEGIN 0 */
 
@@ -58,6 +59,8 @@ void MX_I2C4_Init(void)
   }
   /* USER CODE BEGIN I2C4_Init 2 */
 
+  NVIC_EnableIRQ(I2C4_ER_IRQn);
+  NVIC_EnableIRQ(I2C4_EV_IRQn);
   /* USER CODE END I2C4_Init 2 */
 
 }

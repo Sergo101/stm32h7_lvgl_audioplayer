@@ -36,7 +36,7 @@ extern SD_HandleTypeDef hsd2;
 extern DMA_HandleTypeDef hdma_sai2_b;
 extern SAI_HandleTypeDef hsai_BlockB2;
 extern HCD_HandleTypeDef hhcd;
-
+extern I2C_HandleTypeDef hi2c4;
 /* USER CODE BEGIN EV */
 
 /* USER CODE END EV */
@@ -256,6 +256,29 @@ void SAI2_IRQHandler(void)
   /* USER CODE BEGIN SAI2_IRQn 1 */
 
   /* USER CODE END SAI2_IRQn 1 */
+}
+
+void I2C4_EV_IRQHandler(void)
+{
+  HAL_I2C_EV_IRQHandler(&hi2c4);
+}
+
+void I2C4_ER_IRQHandler(void)
+{
+  HAL_I2C_ER_IRQHandler(&hi2c4);
+}
+/**
+  * @brief This function handles EXTI line3 interrupt.
+  */
+void EXTI9_5_IRQHandler(void)
+{
+  /* USER CODE BEGIN EXTI3_IRQn 0 */
+
+  /* USER CODE END EXTI3_IRQn 0 */
+  HAL_GPIO_EXTI_IRQHandler(TP_INT_Pin);
+  /* USER CODE BEGIN EXTI3_IRQn 1 */
+
+  /* USER CODE END EXTI3_IRQn 1 */
 }
 
 #ifdef USE_USB_FS

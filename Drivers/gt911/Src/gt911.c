@@ -3,7 +3,6 @@
 #include "string.h" 
 #include "main.h"
 
-//INT���Ÿ���
 static void set_float(void)
 {
 	GPIO_InitTypeDef GPIO_InitStruct = {0};
@@ -25,7 +24,6 @@ static void set_int_out(void)
 	HAL_GPIO_WritePin(TP_INT_GPIO_Port, TP_INT_Pin, GPIO_PIN_RESET);
 }
 
-//д�Ĵ���
 static void GT911_WR_Reg_One_byte(uint16_t reg,uint8_t data)
 {
 	uint8_t temp[3]={0};
@@ -38,7 +36,6 @@ static void GT911_WR_Reg_One_byte(uint16_t reg,uint8_t data)
 	}
 }
 
-//��GT911����һ������		  
 static uint8_t GT911_RD_Reg(uint16_t reg,uint8_t *buf,uint8_t len)
 {
 	uint8_t res = 0;
@@ -50,7 +47,6 @@ static uint8_t GT911_RD_Reg(uint16_t reg,uint8_t *buf,uint8_t len)
 	return res;
 }
 
-//��ʼ��
 void gt911_init(void)
 {
 	uint8_t temp[5]={0};
@@ -75,34 +71,49 @@ void gt911_init(void)
 
 	printf("CTP ID:%s\r\n",temp);
 	temp[0]=0X02;			
-	GT911_WR_Reg_One_byte(GT_CTRL_REG,temp[0]);//����λGT9147
-	GT911_RD_Reg(GT_CFGS_REG,temp,1);//��ȡGT_CFGS_REG�Ĵ���
+	GT911_WR_Reg_One_byte(GT_CTRL_REG,temp[0]);
+	GT911_RD_Reg(GT_CFGS_REG,temp,1);
 	printf("TP firmware version: %d\r\n",temp[0]);
 	
 }
 
-//��ȡ����
+// uint8_t gt911_buf[4]={0};
+uint16_t regaddr;
+uint8_t gt911_buf[6]={0};
+
 void gt911_get_state(TS_StateTypeDef* state)
 {
-	uint8_t flag=0;
-	uint8_t buf[4]={0};
-	GT911_RD_Reg(GT_GSTID_REG,&flag,1);
-	if(flag&0x80)																		//�����Ƿ�׼����
-	{
-		//���־
-		GT911_WR_Reg_One_byte(GT_GSTID_REG,0);
-		if(flag&0xf)																	//�����ݵ�
+
+
+	volatile uint8_t intpin;
+	intpin = HAL_GPIO_ReadPin(TP_INT_GPIO_Port, TP_INT_Pin);
+	// GT911_RD_Reg(GT_GSTID_REG,&flag,1);
+	// if(flag&0x80)
+	// {
+		intpin = HAL_GPIO_ReadPin(TP_INT_GPIO_Port, TP_INT_Pin);
+		// HAL_I2C_Mem_Read_IT(&hi2c4, GT_CMD_WR, GT_GSTID_REG, 2, gt911_buf, 4);
+		// GT911_WR_Reg_One_byte(GT_GSTID_REG,0);
+		if(gt911_buf[0]&0xf)
 		{
-			//ֻ���һ����
-			GT911_RD_Reg(GT_TP1_REG,buf,4);
-			state->X=(uint16_t)((buf[1]<<8)|buf[0]);
-			state->Y=(uint16_t)((buf[3]<<8)|buf[2]);
+			state->X=(uint16_t)((gt911_buf[3]<<8)|gt911_buf[2]);
+			state->Y=(uint16_t)((gt911_buf[5]<<8)|gt911_buf[4]);
 			state->TouchDetected=1;
 		}
 		else
 			state->TouchDetected=0;
-	}
-	else
-		state->TouchDetected=0;
+	// }
+	// else
+	// 	state->TouchDetected=0;
+}
+uint16_t gt911_command = 0;
+
+void HAL_I2C_MemRxCpltCallback (I2C_HandleTypeDef *hi2c)
+{
+	HAL_I2C_Mem_Write_IT(&hi2c4, GT_CMD_WR, GT_GSTID_REG, 2, (uint8_t*)&gt911_command, 1);
+	__NOP();
 }
 
+void gt911_StartConvesion(void)
+{
+	HAL_I2C_Mem_Read_IT(&hi2c4, GT_CMD_WR, GT_GSTID_REG, 2, gt911_buf, 6);
+}

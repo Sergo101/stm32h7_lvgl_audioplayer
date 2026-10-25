@@ -10,19 +10,20 @@ extern "C"
 #include "i2c.h"
 
 
-#define GT_CMD_WR    0XBA     //写命令
-#define GT_CMD_RD     0XBB     //读命令
+#define GT_CMD_WR     0XBA
+#define GT_CMD_RD     0XBB
   
-#define GT_CTRL_REG 	0X8040   	//GT9147控制寄存器
-#define GT_CFGS_REG 	0X8047   	//GT9147配置起始地址寄存器
-#define GT_CHECK_REG 	0X80FF   	//GT9147校验和寄存器
-#define GT_PID_REG 		0X8140   	//GT9147产品ID寄存器
-#define GT_GSTID_REG 	0X814E   	//GT9147当前检测到的触摸情况
-#define GT_TP1_REG 		0X8150  	//第一个触摸点数据地址
-#define GT_TP2_REG 		0X8158		//第二个触摸点数据地址
-#define GT_TP3_REG 		0X8160		//第三个触摸点数据地址
-#define GT_TP4_REG 		0X8168		//第四个触摸点数据地址
-#define GT_TP5_REG 		0X8170		//第五个触摸点数据地址
+#define GT_CTRL_REG 	0X8040
+#define GT_CFGS_REG 	0X8047
+#define GT_Module_Switch1 	0X804D
+#define GT_CHECK_REG 	0X80FF
+#define GT_PID_REG 		0X8140
+#define GT_GSTID_REG 	0X814E
+#define GT_TP1_REG 		0X8150
+#define GT_TP2_REG 		0X8158
+#define GT_TP3_REG 		0X8160
+#define GT_TP4_REG 		0X8168
+#define GT_TP5_REG 		0X8170
 	
 typedef struct
 {
@@ -33,6 +34,8 @@ typedef struct
 
 void gt911_init(void);
 void gt911_get_state(TS_StateTypeDef* state);
+void gt911_DataRecievedCallback (struct __I2C_HandleTypeDef *hi2c);
+void gt911_StartConvesion(void);
 
 #ifdef __cplusplus
 }
