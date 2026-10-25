@@ -26,7 +26,7 @@ static lv_display_t * disp;
 
 #ifdef DIRECT_MODE
 #define LVGL_BUFFER_1_ADDR_AT_SDRAM	(0xc0000000)
-#define LVGL_BUFFER_2_ADDR_AT_SDRAM	(0xc0400000)
+#define LVGL_BUFFER_2_ADDR_AT_SDRAM	(0xc00bb800)
 #else
 
 #if LV_COLOR_DEPTH == 16
@@ -72,7 +72,7 @@ disp_flush (lv_display_t * display,
 {
 #ifdef DIRECT_MODE
 	if (lv_display_flush_is_last(disp)) {
-		SCB_CleanInvalidateDCache();
+		SCB_CleanDCache();
 		// wait for VSYNC to avoid tearing
 		while (!(LTDC->CDSR & LTDC_CDSR_VSYNCS));
 		// swap framebuffers (NOTE: LVGL will swap the buffers in the background, so here we can set the LCD framebuffer to the current LVGL buffer, which has been just completed)

@@ -104,6 +104,8 @@ FIL textFile;
 uint8_t tmp[4096];
 char textstr[] = "Listen here you, little shit!\r\n";
 
+__attribute__((section(".rtos_stack"))) uint8_t ucHeap[ configTOTAL_HEAP_SIZE ];
+
 extern SemaphoreHandle_t xSemaphore_usb;
 /**
 * @brief  User Process

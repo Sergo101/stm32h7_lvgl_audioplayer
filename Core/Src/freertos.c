@@ -62,7 +62,7 @@ const osThreadAttr_t defaultTask_attributes = {
 osThreadId_t lvglTaskHandle;
 const osThreadAttr_t lvglTask_attributes = {
     .name = "LvglTask",
-    .stack_size = 1024 * 8,
+    .stack_size = 1024 * 10,
     .priority = (osPriority_t)osPriorityNormal,
 };
 
@@ -144,6 +144,6 @@ void LVGLTimer(void * argument)
   for(;;)
   {
     lv_timer_handler();
-    // osDelay(1);
+    osDelay(2);
   }
 }
