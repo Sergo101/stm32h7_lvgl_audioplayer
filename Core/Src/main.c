@@ -73,7 +73,8 @@ PUTCHAR_PROTOTYPE
     return ch;
 }
 
-#define sdram_addr 0xc0000000
+#define sdram_bank0_addr 0xc0000000
+#define sdram_bank1_addr 0xc0800000
 
 __attribute__((section(".AppInfo"))) const AppInfo_t AppInfo =
 {
@@ -190,7 +191,8 @@ int main(void)
   MX_FMC_Init();
 	SDRAM_InitSequence();
   /* Clear first video buffer */
-  memset((void*)0xc0000000, 0x00, 0xbb800);
+  memset((void*)sdram_bank0_addr, 0x00, 0xbb800);
+  memset((void*)sdram_bank1_addr, 0x00, 0xbb800);
 
   MX_DMA2D_Init();
   MX_LTDC_Init();

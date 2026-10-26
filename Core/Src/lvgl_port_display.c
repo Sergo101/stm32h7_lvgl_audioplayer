@@ -25,8 +25,9 @@ static void disp_flush_complete (DMA2D_HandleTypeDef*);
 static lv_display_t * disp;
 
 #ifdef DIRECT_MODE
+// Define 2 frame buffers in different banks of external SDRAM
 #define LVGL_BUFFER_1_ADDR_AT_SDRAM	(0xc0000000)
-#define LVGL_BUFFER_2_ADDR_AT_SDRAM	(0xc00bb800)
+#define LVGL_BUFFER_2_ADDR_AT_SDRAM	(0xc0800000)
 #else
 
 #if LV_COLOR_DEPTH == 16
@@ -74,7 +75,7 @@ disp_flush (lv_display_t * display,
 	if (lv_display_flush_is_last(disp)) {
 		SCB_CleanDCache();
 		// wait for VSYNC to avoid tearing
-		while (!(LTDC->CDSR & LTDC_CDSR_VSYNCS));
+		// while (!(LTDC->CDSR & LTDC_CDSR_VSYNCS));
 		// swap framebuffers (NOTE: LVGL will swap the buffers in the background, so here we can set the LCD framebuffer to the current LVGL buffer, which has been just completed)
 		HAL_LTDC_SetAddress(&hltdc, (uint32_t)(lv_display_get_buf_active(disp)->data), 0);
 	}
