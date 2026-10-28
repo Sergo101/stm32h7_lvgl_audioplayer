@@ -37,7 +37,6 @@ set(cpu_PARAMS
 file(GLOB_RECURSE sources_SRCS
 ${CMAKE_CURRENT_LIST_DIR}/Core/Src/*.c
 ${CMAKE_CURRENT_LIST_DIR}/Middlewares/Third_Party/lvgl/src/*.c
-${CMAKE_CURRENT_LIST_DIR}/Middlewares/Third_Party/lvgl/demos/*.c
 ${CMAKE_CURRENT_LIST_DIR}/Middelwares/Third_Party/lvgl/src/misc/*.c
 )
 

@@ -43,7 +43,7 @@
 #include "lvgl.h"
 #include "lvgl_port_display.h"
 #include "lvgl_port_touch.h"
-#include "demos/lv_demos.h"
+#include "main_screen.h"
 
 #include "usbh_core.h"
 #include "usbh_msc.h"
@@ -223,9 +223,10 @@ int main(void)
   lvgl_touchscreen_init();
 
   /* lvgl demo */
-  lv_demo_widgets();
+  // lv_demo_widgets();
   //lv_demo_music();
   //lv_demo_benchmark();
+  lv_example_get_started_button();
 
   // parse_settings();
   /* Init scheduler */

@@ -3,12 +3,15 @@ cmake_minimum_required(VERSION 3.20)
 set(LIB_NAME app)
 
 file(GLOB sources
-  ${CMAKE_CURRENT_LIST_DIR}/Src/*.c
-  ${CMAKE_CURRENT_LIST_DIR}/Src/*.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/audio/*.c
+  ${CMAKE_CURRENT_LIST_DIR}/files/*.c
+  ${CMAKE_CURRENT_LIST_DIR}/graphics/*.c
 )
 
 set(includes
-  ${CMAKE_CURRENT_LIST_DIR}/Inc
+  ${CMAKE_CURRENT_LIST_DIR}/audio
+  ${CMAKE_CURRENT_LIST_DIR}/files
+  ${CMAKE_CURRENT_LIST_DIR}/graphics
 )
 
 add_library(${LIB_NAME} INTERFACE)
