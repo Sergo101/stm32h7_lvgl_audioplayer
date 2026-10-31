@@ -11,7 +11,7 @@
 #define COLOR_BTN2          lv_color_hex(0x808080)
 
 lv_obj_t *s_screens[SCREEN_COUNT];
-
+lv_subject_t slider_val;
 static lv_obj_t *make_screen(void)
 {
   lv_obj_t *scr = lv_obj_create(NULL);
@@ -42,6 +42,12 @@ static void btn_event_cb(lv_event_t * e)
     }
 }
 
+static void slider_callback(lv_event_t * e)
+{
+    lv_obj_t * slider = lv_event_get_target_obj(e);
+    int32_t value = lv_slider_get_value(slider);
+    lv_slider_set_value(slider, value, LV_ANIM_OFF);
+}
 /**
  * @title Button with click counter
  * @brief Increment a label on a button each time it is clicked.
@@ -53,7 +59,8 @@ static void btn_event_cb(lv_event_t * e)
  */
 void lv_example_get_started_button(void)
 {
-    lv_obj_t * btn = lv_button_create(lv_screen_active());     /*Add a button the current screen*/
+    s_screens[0] = lv_screen_active();
+    lv_obj_t * btn = lv_button_create(s_screens[0]);     /*Add a button the current screen*/
     lv_obj_set_pos(btn, 10, 10);                            /*Set its position*/
     lv_obj_set_size(btn, 120, 50);                          /*Set its size*/
     lv_obj_add_event_cb(btn, btn_event_cb, LV_EVENT_ALL, NULL);           /*Assign a callback to the button*/
@@ -61,8 +68,15 @@ void lv_example_get_started_button(void)
     lv_obj_t * label = lv_label_create(btn);          /*Add a label to the button*/
     lv_label_set_text(label, "Button");                     /*Set the labels text*/
     lv_obj_center(label);
-    
-    s_screens[0] = lv_screen_active();
+
+    lv_obj_t * slider = lv_slider_create(s_screens[0]);
+    lv_slider_set_range(slider, 0, 512);
+    lv_slider_set_value(slider, 250, LV_ANIM_OFF);
+    lv_obj_set_scroll_on_focus(slider, true);
+    lv_obj_set_pos(slider, 150, 100);
+    lv_slider_set_mode(slider, LV_SLIDER_MODE_NORMAL);
+    lv_slider_bind_value(slider, &slider_val);
+    lv_obj_add_event_cb(slider, slider_callback, LV_EVENT_VALUE_CHANGED,NULL);
     
     s_screens[1] = make_screen();
     btn = lv_button_create(s_screens[1]);
