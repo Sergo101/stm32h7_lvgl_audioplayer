@@ -53,10 +53,14 @@ lvgl_touchscreen_read (lv_indev_t      *indev,
   // if(touch_irq)
   //   {
       /* reset interrupt flag */
-      touch_irq = 0;
-	  data->point.x = touch.X;
-	  data->point.y = touch.Y;
-	  data->state = touch.TouchDetected;
+  if(touch.TouchDetected == 1)
+  {
+    data->point.x = touch.X;
+    data->point.y = touch.Y;
+  }
+    touch_irq = 0;
+	data->state = touch.TouchDetected;
+
     // }
     // /*If there is no interrupt the touch is released*/
     // else {
