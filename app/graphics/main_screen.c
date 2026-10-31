@@ -9,9 +9,17 @@
 #define THEME_BG_RGB        0xF4F6F9U        /* also the tint of the cover backdrops */
 #define COLOR_BG            lv_color_hex(THEME_BG_RGB)
 #define COLOR_BTN2          lv_color_hex(0x808080)
-
+static lv_obj_t * slider;
 lv_obj_t *s_screens[SCREEN_COUNT];
 lv_subject_t slider_val;
+
+void slider_update(void)
+{
+    static int32_t value = 0;
+    value ++;
+    if(value > 512) value = 0;
+    lv_slider_set_value(slider, value, LV_ANIM_OFF);
+}
 static lv_obj_t *make_screen(void)
 {
   lv_obj_t *scr = lv_obj_create(NULL);
@@ -44,9 +52,9 @@ static void btn_event_cb(lv_event_t * e)
 
 static void slider_callback(lv_event_t * e)
 {
-    lv_obj_t * slider = lv_event_get_target_obj(e);
-    int32_t value = lv_slider_get_value(slider);
-    lv_slider_set_value(slider, value, LV_ANIM_OFF);
+    lv_obj_t * slider_local = lv_event_get_target_obj(e);
+    int32_t value = lv_slider_get_value(slider_local);
+    // lv_slider_set_value(slider_local, value, LV_ANIM_OFF);
 }
 /**
  * @title Button with click counter
@@ -69,14 +77,17 @@ void lv_example_get_started_button(void)
     lv_label_set_text(label, "Button");                     /*Set the labels text*/
     lv_obj_center(label);
 
-    lv_obj_t * slider = lv_slider_create(s_screens[0]);
-    lv_slider_set_range(slider, 0, 512);
-    lv_slider_set_value(slider, 250, LV_ANIM_OFF);
+    slider = lv_slider_create(s_screens[0]);
+    lv_slider_set_range(slider, 0, 1024);
+    lv_obj_set_style_bg_color(slider, COLOR_BTN2, LV_PART_INDICATOR);
+    lv_obj_set_style_radius(slider, 5, LV_PART_KNOB);
+    lv_obj_set_width(slider, 500);
     lv_obj_set_scroll_on_focus(slider, true);
     lv_obj_set_pos(slider, 150, 100);
     lv_slider_set_mode(slider, LV_SLIDER_MODE_NORMAL);
     lv_slider_bind_value(slider, &slider_val);
     lv_obj_add_event_cb(slider, slider_callback, LV_EVENT_VALUE_CHANGED,NULL);
+    lv_obj_set_clickable(slider, false);
     
     s_screens[1] = make_screen();
     btn = lv_button_create(s_screens[1]);

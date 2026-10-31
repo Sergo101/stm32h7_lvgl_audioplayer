@@ -136,6 +136,7 @@ void StartDefaultTask(void *argument)
 		HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
     gt911_StartConvesion();
     osDelay(33);
+    slider_update();
   }
 }
 

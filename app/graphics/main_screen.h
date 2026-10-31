@@ -6,6 +6,7 @@ extern "C" {
 #endif
 
 void lv_example_get_started_button(void);
+void slider_update(void);
 
 #ifdef __cplusplus
 }
